@@ -72,3 +72,8 @@ Content-Length: 90					#主体内容长度
 * [form-verify](./code/form/verify/main.go)
     - 感觉大部分的用户输入检查应该在前端都处理了比较好
 
+## 处理文件上传
+* [form-file-upload](./code/form/file/main.go)
+    - 表单中的两个属性：
+        - `enctype="multipart/form-data"`
+        - `type="file"`
