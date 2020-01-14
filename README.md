@@ -79,3 +79,64 @@ Content-Length: 90					#主体内容长度
         - `type="file"`
     - 用`r.FormFile`获取文件句柄
 
+# 访问数据库
+## database/sql接口
+### sql.go中定义的接口或者函数
+* `Register`函数，一般在驱动的`init`函数执行，注册驱动名称
+### driver.go中定义的接口或函数
+* `Driver`接口，定义了`Open`接口函数，返回一个`Conn`
+* `Conn`接口，定义了数据库操作的前期和后期的接口动作，其中
+    - `Prepare`会返回一个准备好的`Stmt`
+    - `Begin`会返回一个事务`Tx`
+* `Stmt` 接口，操作数据库，包括
+    - `Exec`函数（update/insert数据库），返回`Result`数据
+    - `Query`函数（select数据库），返回`Rows`结果
+* `Tx`接口，定义了递交和回滚接口函数
+* `Execer`接口，只有一个Exec接口，如果没有定义，就按照上面的接口执行，`Prepare`返回`Stmt`，然后执行`Stmt`的`Exec`，然后关闭`Stmt`。
+* `Result`接口，是`Exec`返回的对象，定义了
+    - `LastInsertId`接口函数，返回插入操作得到的自增ID。
+    - `RowsAffected`接口函数，返回查询操作影响的数据条目数。
+* `Rows`接口，返回
+    - `Columns`接口函数，返回查询数据库表的字段信息
+    - `Close`接口函数，关闭`Rows`迭代器
+    - `Next`接口函数，返回下一条数据
+* `Vaule`接口，是一个空接口，可以容纳任何数据，但是必须是driver能操作的常见类型
+* `ValueConverter`接口，定义了如何把一个普通的值转化成`Value`的接口
+
+## 使用MySQL数据库
+* [mysql-main-operation](./code/database/mysql/main.go)
+* 启动示例代码之前需要做的准备工作
+    - 按照mysql
+    - 创建用户`ben`，密码是`123456`
+    - 创建数据库`test`
+    - 用以下命令在数据库`test`下创建两个表单
+    ```sql
+    CREATE TABLE `userinfo` (
+	    `uid` INT(10) NOT NULL AUTO_INCREMENT,
+	    `username` VARCHAR(64) NULL DEFAULT NULL,
+	    `department` VARCHAR(64) NULL DEFAULT NULL,
+	    `created` DATE NULL DEFAULT NULL,
+	    PRIMARY KEY (`uid`)
+    );
+
+    CREATE TABLE `userdetail` (
+	    `uid` INT(10) NOT NULL DEFAULT '0',
+	    `intro` TEXT NULL,
+	    `profile` TEXT NULL,
+	    PRIMARY KEY (`uid`)
+    );
+    ```
+* `sql.Open()`函数，支持如下格式：
+    ```
+    user@unix(/path/to/socket)/dbname?charset=utf8
+    user:password@tcp(localhost:5555)/dbname?charset=utf8
+    user:password@/dbname
+    user:password@tcp([de:ad:be:ef::ca:fe]:80)/dbname
+    ```<br>
+    需要注意，如果密码错误Open动作不会失败，后续操作才会失败。
+* `sql.Prepare()`函数准备要执行的sql操作
+* `stmt.Exec()`函数用来执行`stmt`准备好的SQL语句
+* `db.Query()`函数用来直接执行Sql操作，并返回Rows结果
+
+## 使用Beego orm库进行ORM开发
+* [begoo-orm-mysql](./code/database/orm/main.go)
