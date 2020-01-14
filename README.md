@@ -192,3 +192,14 @@ for _, cookie := range r.Cookies() {
     - `Session`: 里面维护了一个`map`，用户拿到自己的session后，可以操作这个`map`
     - `Provider`：存储`Session`的接口，隐藏在底层，可以用不同是数据库实现
 
+# Web服务
+## WebSocket
+* HTML5的重要特性，实现了基于浏览器的远程socket
+* 在WebSocket之前，浏览器只能通过“轮询”和服务器进行实时通信，服务器一直是被动的。
+* WebSocket采用了特殊的报头，在浏览器和服务器之间建立一条连接通道，就像常规的**TCP Socket**一样，可以使用JavaScript写入或从中接收数据。
+* 好处：服务端可以推送数据到客户端
+* WebSocket URL：ws://或wss://(在SSL上)
+* [go-websocket-server](./code/websocket/server.go) 和 [go-websocket-client](./code/websocket/client.html)
+    - client在网页中嵌入JS脚本，向服务器发起WebSocket连接，然后注册回调函数
+    - 服务器开启普通的HTTP服务，监听某个端口。当有一个Client发来WebSocket连接，服务器会为这个连接开启一个新的线程处理客户端请求。示例代码中，服务器在一个大循环中不断接收客户端发来的信息，然后马上转发回客户端。由于是在另一个线程中处理的，主线程还是可以接收另一个客户端的WebSocket连接。
+
