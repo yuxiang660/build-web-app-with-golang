@@ -140,3 +140,20 @@ Content-Length: 90					#主体内容长度
 
 ## 使用Beego orm库进行ORM开发
 * [begoo-orm-mysql](./code/database/orm/main.go)
+
+## NOSQL数据库操作
+### Redis
+* [go-redis](./code/database/redis/main.go)
+    - `Pool *redis.Pool`是一个redis连接的线程池，每次`Pool.Get()`会新建一个连接
+    - `Pool`的`Close`放在`Init`里面利用`chan`实现，很巧妙
+    - `Get("test")`其中的`test`是redis一个默认的key，会返回`It's working!`.
+### Mongodb
+* [go-mongodb](./code/database/mongodb/main.go)
+    - 在执行此实例代码前，请先安装`mongodb`。在ubuntu上安装好mongodb后，可以直接无账号密码登录，默认端口号是`:27017`
+    - 执行实例代码后，会往`mongodb`中加入两条document，可以用以下命令查看：<br>
+    ```
+    > mongo
+    mongo> show dbs
+    mongo> use test
+    mongo> db.people.find()
+    ```
