@@ -209,3 +209,19 @@ for _, cookie := range r.Cookies() {
 * Go支持三个级别的RPC：TCP、HTTP、JSONRPC
     - HTTP和TCP实现的区别：如果采用了TCP协议，不像HTTP有封装好的接口，我们需要自己在一个大循环中监听端口，当有连接来的时候，再把连接交给RPC服务处理。
     - JSON RPC采用了JSON编码，而不是gob编码，其他和RPC TCP连接一样。目前不支持HTTP方式。
+
+# 调试
+## GDB
+* 编译时需要如下命令：
+> go build -gcflags "-N -l" main.go
+* 修改上下文相关变量信息：
+> set variable [variableName]=[variableValue]
+* 查看goroutines的信息(需要比较新的GDB版本才支持)
+> info goroutines
+## Go测试
+* `gotests`插件自动生成测试代码
+
+# 部署
+## 应用日志
+* logrus
+* seelog
