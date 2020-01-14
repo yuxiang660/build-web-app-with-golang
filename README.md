@@ -202,4 +202,10 @@ for _, cookie := range r.Cookies() {
 * [go-websocket-server](./code/websocket/server.go) 和 [go-websocket-client](./code/websocket/client.html)
     - client在网页中嵌入JS脚本，向服务器发起WebSocket连接，然后注册回调函数
     - 服务器开启普通的HTTP服务，监听某个端口。当有一个Client发来WebSocket连接，服务器会为这个连接开启一个新的线程处理客户端请求。示例代码中，服务器在一个大循环中不断接收客户端发来的信息，然后马上转发回客户端。由于是在另一个线程中处理的，主线程还是可以接收另一个客户端的WebSocket连接。
+## REST
+* HTML标准只能有链接和表单支持`GET`和`POST`，在没有Ajax支持的网页浏览器中不能发出`PUT`和`DELETE`命令。
 
+## RPC
+* Go支持三个级别的RPC：TCP、HTTP、JSONRPC
+    - HTTP和TCP实现的区别：如果采用了TCP协议，不像HTTP有封装好的接口，我们需要自己在一个大循环中监听端口，当有连接来的时候，再把连接交给RPC服务处理。
+    - JSON RPC采用了JSON编码，而不是gob编码，其他和RPC TCP连接一样。目前不支持HTTP方式。
