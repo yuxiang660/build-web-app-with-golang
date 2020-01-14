@@ -157,3 +157,38 @@ Content-Length: 90					#主体内容长度
     mongo> use test
     mongo> db.people.find()
     ```
+
+# session和数据存储
+## Cookie
+* 客户端机制保存用户信息，一起发送给服务器
+* cookie分为：
+    - 会话cookie，浏览器关闭就消失了
+    - 永久cookie，只要没有超时，一直有效
+* Go设置cookie
+往reponse写入cookie
+```
+expiration := time.Now()
+expiration = expiration.AddDate(1, 0, 0)
+cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: expiration}
+http.SetCookie(w, &cookie)
+```
+* Go读取cookie
+通过request获取cookie
+```
+for _, cookie := range r.Cookies() {
+	fmt.Fprint(w, cookie.Name)
+}
+```
+## Go如何使用session
+* 服务器端的机制
+    - 生成全局唯一标识sessionid
+    - 开辟数据存储空间，永久化session
+    - 将session的全局唯一标识符发送给客户端，两种方法：cookie和URL重写
+        - cookie方法：设置Set-cookie头，并设置会话cookie
+        - URL重写：在返回给用户的页面里的URL后面追加session标识符
+* Go实现session管理
+    - `SessionManager`: 用与Session的管理，连接用户和服务器存储的session
+        - `SessionStart`
+    - `Session`: 里面维护了一个`map`，用户拿到自己的session后，可以操作这个`map`
+    - `Provider`：存储`Session`的接口，隐藏在底层，可以用不同是数据库实现
+
