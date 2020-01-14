@@ -77,3 +77,5 @@ Content-Length: 90					#主体内容长度
     - 表单中的两个属性：
         - `enctype="multipart/form-data"`
         - `type="file"`
+    - 用`r.FormFile`获取文件句柄
+
