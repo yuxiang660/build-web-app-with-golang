@@ -63,4 +63,12 @@ Content-Length: 90					#主体内容长度
 
 # 表单
 ## 处理表单的输入
+*[form-input](./code/form/input/main.go)
+    - `login.gtpl`是Go的HTML模板，用于动态生成静态网页（接收go文件传过来的各种内容）
+    - `r *http.Request`中存了所有用户传过来的所有信息
+    - `request.Form`是一个`url.Values`的类型，在掉了`r.ParseForm`后，里面的内容就初始化了
+
+## 验证表单的输入
+* [form-verify](./code/form/verify/main.go)
+    - 感觉大部分的用户输入检查应该在前端都处理了比较好
 
